@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GARTI/RAMCHA • Subscriptions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            font-family: 'Space Grotesk', sans-serif; 
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --bg-card: #1a1a1a;
+            --bg-elevated: #242424;
+            --accent-primary: #ff3366;
+            --accent-secondary: #ff6b99;
+            --accent-tertiary: #33ccff;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --border-primary: #333333;
+            --border-secondary: #444444;
+            --shadow-glow: 0 0 40px rgba(255, 51, 102, 0.3);
+            --shadow-glow-blue: 0 0 40px rgba(51, 204, 255, 0.3);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --gradient-primary: linear-gradient(135deg, #ff3366 0%, #ff6b99 100%);
+            --gradient-secondary: linear-gradient(135deg, #33ccff 0%, #6699ff 100%);
+            --gradient-bg: linear-gradient(135deg, #0a0a0a 0%, #121212 50%, #1a1a1a 100%);
+        }
+        
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --bg-elevated: #f1f3f4;
+            --accent-primary: #e63946;
+            --accent-secondary: #f77f00;
+            --accent-tertiary: #007bff;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --border-primary: #dee2e6;
+            --border-secondary: #ced4da;
+            --shadow-glow: 0 0 40px rgba(230, 57, 70, 0.2);
+            --shadow-glow-blue: 0 0 40px rgba(0, 123, 255, 0.2);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #e63946 0%, #f77f00 100%);
+            --gradient-secondary: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+            --gradient-bg: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #f1f3f4 100%);
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: var(--gradient-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* СУПЕР ЯРКИЙ И ВИДИМЫЙ ФОН! */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                /* ОЧЕНЬ ЯРКАЯ СЕТКА */
+                linear-gradient(rgba(255, 51, 102, 0.4) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(255, 51, 102, 0.4) 2px, transparent 2px),
+                /* БОЛЬШИЕ ЯРКИЕ ТОЧКИ */
+                radial-gradient(circle at 50% 50%, rgba(255, 51, 102, 0.6) 5px, transparent 10px),
+                radial-gradient(circle at 25% 25%, rgba(51, 204, 255, 0.5) 4px, transparent 8px),
+                radial-gradient(circle at 75% 75%, rgba(255, 107, 153, 0.5) 4px, transparent 8px),
+                radial-gradient(circle at 20% 80%, rgba(102, 255, 102, 0.4) 3px, transparent 6px),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 102, 0.4) 3px, transparent 6px);
+            background-size: 40px 40px, 40px 40px, 80px 80px, 60px 60px, 60px 60px, 70px 70px, 70px 70px;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        [data-theme="light"] body::before {
+            background-image: 
+                linear-gradient(rgba(230, 57, 70, 0.5) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(230, 57, 70, 0.5) 2px, transparent 2px),
+                radial-gradient(circle at 50% 50%, rgba(230, 57, 70, 0.7) 5px, transparent 10px),
+                radial-gradient(circle at 25% 25%, rgba(0, 123, 255, 0.6) 4px, transparent 8px),
+                radial-gradient(circle at 75% 75%, rgba(247, 119, 0, 0.6) 4px, transparent 8px),
+                radial-gradient(circle at 20% 80%, rgba(34, 139, 34, 0.5) 3px, transparent 6px),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.5) 3px, transparent 6px);
+        }
+        
+        /* Статические градиентные пятна с дополнительными элементами */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                /* Основные градиентные пятна */
+                radial-gradient(circle at 20% 30%, rgba(255, 51, 102, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(51, 204, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 60% 10%, rgba(255, 107, 153, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(102, 153, 255, 0.06) 0%, transparent 50%),
+                /* Дополнительные декоративные элементы */
+                radial-gradient(circle at 10% 60%, rgba(255, 51, 102, 0.04) 0%, transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(51, 204, 255, 0.04) 0%, transparent 30%),
+                radial-gradient(circle at 70% 80%, rgba(255, 107, 153, 0.03) 0%, transparent 25%),
+                radial-gradient(circle at 30% 15%, rgba(102, 153, 255, 0.03) 0%, transparent 25%),
+                /* Линейные декоративные градиенты */
+                linear-gradient(45deg, transparent 0%, rgba(255, 51, 102, 0.02) 25%, transparent 50%, rgba(51, 204, 255, 0.02) 75%, transparent 100%),
+                linear-gradient(-45deg, transparent 0%, rgba(255, 107, 153, 0.015) 30%, transparent 60%, rgba(102, 153, 255, 0.015) 90%, transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        [data-theme="light"] body::after {
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(230, 57, 70, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(0, 123, 255, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at 60% 10%, rgba(247, 119, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(102, 16, 242, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 10% 60%, rgba(230, 57, 70, 0.06) 0%, transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(0, 123, 255, 0.06) 0%, transparent 30%),
+                radial-gradient(circle at 70% 80%, rgba(247, 119, 0, 0.05) 0%, transparent 25%),
+                radial-gradient(circle at 30% 15%, rgba(102, 16, 242, 0.05) 0%, transparent 25%),
+                linear-gradient(45deg, transparent 0%, rgba(230, 57, 70, 0.03) 25%, transparent 50%, rgba(0, 123, 255, 0.03) 75%, transparent 100%),
+                linear-gradient(-45deg, transparent 0%, rgba(247, 119, 0, 0.025) 30%, transparent 60%, rgba(102, 16, 242, 0.025) 90%, transparent 100%);
+        }
+        
+        /* Декоративные элементы на заднем фоне */
+        .background-decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .decoration-shape {
+            position: absolute;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px rgba(255, 51, 102, 0.3));
+        }
+        
+        .decoration-1 {
+            width: 120px;
+            height: 120px;
+            top: 15%;
+            right: 10%;
+        }
+        
+        .decoration-2 {
+            width: 80px;
+            height: 80px;
+            top: 25%;
+            left: 8%;
+        }
+        
+        .decoration-3 {
+            width: 100px;
+            height: 100px;
+            top: 45%;
+            right: 15%;
+        }
+        
+        .decoration-4 {
+            width: 90px;
+            height: 90px;
+            top: 65%;
+            left: 12%;
+        }
+        
+        .decoration-5 {
+            width: 140px;
+            height: 70px;
+            top: 35%;
+            left: 45%;
+        }
+        
+        .decoration-6 {
+            width: 110px;
+            height: 110px;
+            top: 70%;
+            right: 8%;
+        }
+        
+        /* Более яркие декоративные точки */
+        .background-decorations::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 51, 102, 0.4);
+            border-radius: 50%;
+            top: 20%;
+            left: 25%;
+            box-shadow: 
+                150px 200px 0 rgba(51, 204, 255, 0.35),
+                300px 50px 0 rgba(255, 107, 153, 0.38),
+                -100px 150px 0 rgba(102, 153, 255, 0.32),
+                450px 300px 0 rgba(255, 51, 102, 0.36),
+                200px 400px 0 rgba(51, 204, 255, 0.34),
+                600px 100px 0 rgba(255, 107, 153, 0.33),
+                100px 320px 0 rgba(102, 153, 255, 0.37),
+                800px 250px 0 rgba(255, 51, 102, 0.31),
+                -50px 400px 0 rgba(51, 204, 255, 0.39),
+                750px 450px 0 rgba(255, 107, 153, 0.35);
+        }
+        
+        /* Увеличенные мелкие элементы */
+        .background-decorations::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 51, 102, 0.45);
+            border-radius: 50%;
+            top: 10%;
+            left: 30%;
+            box-shadow: 
+                80px 120px 0 rgba(51, 204, 255, 0.4),
+                200px 80px 0 rgba(255, 107, 153, 0.42),
+                350px 200px 0 rgba(102, 153, 255, 0.38),
+                120px 300px 0 rgba(255, 51, 102, 0.41),
+                500px 150px 0 rgba(51, 204, 255, 0.39),
+                280px 350px 0 rgba(255, 107, 153, 0.43),
+                600px 50px 0 rgba(102, 153, 255, 0.37),
+                50px 250px 0 rgba(255, 51, 102, 0.44),
+                700px 300px 0 rgba(51, 204, 255, 0.36),
+                400px 500px 0 rgba(255, 107, 153, 0.4),
+                150px 450px 0 rgba(102, 153, 255, 0.38),
+                650px 400px 0 rgba(255, 51, 102, 0.35),
+                850px 200px 0 rgba(51, 204, 255, 0.41),
+                300px 600px 0 rgba(255, 107, 153, 0.39),
+                550px 550px 0 rgba(102, 153, 255, 0.42),
+                750px 100px 0 rgba(255, 51, 102, 0.37);
+        }
+        
+        /* Адаптация для светлой темы */
+        [data-theme="light"] .decoration-shape {
+            opacity: 0.8;
+        }
+        
+        [data-theme="light"] .background-decorations::before {
+            box-shadow: 
+                150px 200px 0 rgba(230, 57, 70, 0.25),
+                300px 50px 0 rgba(0, 123, 255, 0.22),
+                -100px 150px 0 rgba(247, 119, 0, 0.2),
+                450px 300px 0 rgba(102, 16, 242, 0.18),
+                200px 400px 0 rgba(230, 57, 70, 0.21),
+                600px 100px 0 rgba(0, 123, 255, 0.19),
+                100px 320px 0 rgba(247, 119, 0, 0.23),
+                800px 250px 0 rgba(102, 16, 242, 0.16),
+                -50px 400px 0 rgba(230, 57, 70, 0.24),
+                750px 450px 0 rgba(0, 123, 255, 0.2);
+        }
+        
+        [data-theme="light"] .background-decorations::after {
+            box-shadow: 
+                80px 120px 0 rgba(230, 57, 70, 0.3),
+                200px 80px 0 rgba(0, 123, 255, 0.28),
+                350px 200px 0 rgba(247, 119, 0, 0.25),
+                120px 300px 0 rgba(102, 16, 242, 0.27),
+                500px 150px 0 rgba(230, 57, 70, 0.26),
+                280px 350px 0 rgba(0, 123, 255, 0.24),
+                600px 50px 0 rgba(247, 119, 0, 0.29),
+                50px 250px 0 rgba(102, 16, 242, 0.23),
+                700px 300px 0 rgba(230, 57, 70, 0.25),
+                400px 500px 0 rgba(0, 123, 255, 0.27),
+                150px 450px 0 rgba(247, 119, 0, 0.22),
+                650px 400px 0 rgba(102, 16, 242, 0.28),
+                850px 200px 0 rgba(230, 57, 70, 0.24),
+                300px 600px 0 rgba(0, 123, 255, 0.26),
+                550px 550px 0 rgba(247, 119, 0, 0.21),
+                750px 100px 0 rgba(102, 16, 242, 0.25);
+        }
+        
+        /* Убираем все тяжелые анимации - оставляем только легкие эффекты для кнопок */
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* FULL WIDTH TOP NAVIGATION */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        [data-theme="light"] .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom-color: rgba(230, 57, 70, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            justify-content: space-between;
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff3366, #ff6b99);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(255, 51, 102, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .logo-icon:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 16px rgba(255, 51, 102, 0.4);
+        }
+        
+        .theme-toggle {
+            background: rgba(42, 42, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            flex-shrink: 0;
+        }
+        
+        .theme-toggle:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: rgba(255, 51, 102, 0.5);
+            background: rgba(52, 52, 52, 0.9);
+        }
+        
+        /* Hero section */
+        .hero {
+            padding: 10rem 0 4rem;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 2rem;
+            letter-spacing: -0.05em;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+        }
+        
+        .hero h1 .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .hero h1 .outline-text {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-primary);
+            text-stroke: 2px var(--text-primary);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            line-height: 1.6;
+        }
+        
+        /* Pricing cards */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+        }
+        
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+        }
+        
+        .pricing-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .pricing-card.featured {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(255, 51, 102, 0.1) 100%);
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.featured::before {
+            transform: scaleX(1);
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .card-price {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .price-main {
+            font-size: 4rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .price-period {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .popular-badge {
+            background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            color: #1a1a1a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); }
+            to { box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6); }
+        }
+        
+        .buy-btn {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+        
+        .payment-method {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-primary);
+            background: var(--bg-primary);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Loading animation */
+        .loading::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        /* Auth Modal Styles */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            animation: slideInUp 0.4s ease;
+        }
+
+        .auth-modal-header {
+            padding: 2rem 2rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .auth-modal-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-close:hover {
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--accent-primary);
+            transform: rotate(90deg);
+        }
+
+        .auth-modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .auth-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 51, 102, 0.4);
+        }
+
+        .auth-btn.primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .auth-footer p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .auth-link {
+            color: var(--accent-primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        #userMenu > div:hover {
+            background: var(--bg-elevated);
+        }
+
+        .subscription-active {
+            background: var(--gradient-primary) !important;
+            color: white !important;
+        }
+
+        .subscription-expired {
+            background: var(--bg-elevated) !important;
+            color: var(--text-muted) !important;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        .message.error {
+            background: rgba(255, 51, 102, 0.1);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            color: var(--accent-primary);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* AI CHAT WIDGET STYLES */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1500;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .chat-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: var(--gradient-primary);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 32px rgba(255, 51, 102, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-toggle-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 51, 102, 0.6);
+        }
+
+        .chat-toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .chat-toggle-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .chat-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #00ff88;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #000;
+            animation: notificationPulse 2s infinite;
+        }
+
+        @keyframes notificationPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 360px;
+            height: 500px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 20px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            animation: slideInFromBottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: headerShimmer 3s infinite;
+        }
+
+        @keyframes headerShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            position: relative;
+            z-index: 2;
+            animation: avatarFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes avatarFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .ai-info {
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ai-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .ai-status {
+            font-size: 12px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: statusBlink 2s infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .chat-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            margin-left: auto;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-primary);
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-bubble.user {
+            background: var(--gradient-primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message-bubble.ai {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-primary);
+            border-radius: 18px;
+            border-bottom-left-radius: 6px;
+            max-width: 85%;
+            align-self: flex-start;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            animation: typingAnimation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.3;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-primary);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-primary);
+            border-radius: 20px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            resize: none;
+            min-height: 20px;
+            max-height: 80px;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .chat-send-btn {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 51, 102, 0.4);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 0;
+            }
+            
+            .navbar-content {
+                gap: 16px;
+                justify-content: space-between;
+                padding: 0 1rem;
+            }
+            
+            .logo {
+                font-size: 16px;
+                gap: 10px;
+                flex-shrink: 0;
+            }
+            
+            .logo-icon, .theme-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .hero {
+                padding: 7rem 0 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .chat-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+                left: 20px;
+                height: 450px;
+            }
+
+            .ai-chat-widget {
+                right: 15px;
+                bottom: 15px;
+            }
+
+            .chat-toggle-btn {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .price-main {
+                font-size: 3rem;
+            }
+
+            .chat-window {
+                bottom: 70px;
+                height: calc(100vh - 120px);
+            }
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Декоративные элементы на заднем фоне -->
+    <div class="background-decorations">
+        <!-- Более яркие геометрические фигуры -->
+        <svg class="decoration-shape decoration-1" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255, 51, 102, 0.3)" stroke-width="3"/>
+            <circle cx="50" cy="50" r="15" fill="rgba(255, 51, 102, 0.15)"/>
+        </svg>
+        
+        <svg class="decoration-shape decoration-2" viewBox="0 0 100 100">
+            <polygon points="50,10 80,80 20,80" fill="none" stroke="rgba(51, 204, 255, 0.3)" stroke-width="3"/>
+            <polygon points="50,25 65,65 35,65" fill="rgba(51, 204, 255, 0.15)"/>
+        </svg>
+        
+        <svg class="decoration-shape decoration-3" viewBox="0 0 100 100">
+            <rect x="25" y="25" width="50" height="50" fill="none" stroke="rgba(255, 107, 153, 0.3)" stroke-width="3" rx="10"/>
+            <rect x="35" y="35" width="30" height="30" fill="rgba(255, 107, 153, 0.15)" rx="5"/>
+        </svg>
+        
+        <svg class="decoration-shape decoration-4" viewBox="0 0 100 100">
+            <path d="M50 10 L85 40 L75 80 L25 80 L15 40 Z" fill="none" stroke="rgba(102, 153, 255, 0.3)" stroke-width="3"/>
+            <path d="M50 25 L70 45 L65 70 L35 70 L30 45 Z" fill="rgba(102, 153, 255, 0.15)"/>
+        </svg>
+        
+        <svg class="decoration-shape decoration-5" viewBox="0 0 100 100">
+            <ellipse cx="50" cy="50" rx="40" ry="20" fill="none" stroke="rgba(255, 51, 102, 0.25)" stroke-width="3"/>
+            <ellipse cx="50" cy="50" rx="25" ry="12" fill="rgba(255, 51, 102, 0.12)"/>
+        </svg>
+        
+        <svg class="decoration-shape decoration-6" viewBox="0 0 100 100">
+            <path d="M50 15 Q75 30 60 55 Q50 75 40 55 Q25 30 50 15 Z" fill="rgba(51, 204, 255, 0.18)" stroke="rgba(51, 204, 255, 0.3)" stroke-width="2"/>
+        </svg>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo" onclick="scrollToTop()">
+                <div class="logo-icon">G</div>
+                <span>GARTI/RAMCHA</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <!-- User Profile or Auth Buttons -->
+                <div id="authSection">
+                    <button id="loginBtn" onclick="showLoginModal()" style="background: var(--gradient-primary); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                        Войти
+                    </button>
+                    <button id="registerBtn" onclick="showRegisterModal()" style="background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-left: 8px;">
+                        Регистрация
+                    </button>
+                </div>
+                
+                <!-- User Profile (hidden by default) -->
+                <div id="userProfile" style="display: none; position: relative;">
+                    <div onclick="toggleUserMenu()" style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 8px 12px; cursor: pointer; transition: all 0.3s ease;">
+                        <div id="userAvatar" style="width: 24px; height: 24px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 700;"></div>
+                        <span id="userName" style="color: var(--text-primary); font-size: 14px; font-weight: 600;"></span>
+                        <span style="color: var(--text-secondary); font-size: 12px;">▼</span>
+                    </div>
+                    
+                    <!-- User Dropdown Menu -->
+                    <div id="userMenu" style="display: none; position: absolute; top: 100%; right: 0; background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 12px; padding: 8px; margin-top: 8px; min-width: 180px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); z-index: 1000;">
+                        <div onclick="showProfileModal()" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                            <span>👤</span>
+                            <span>Мой профиль</span>
+                        </div>
+                        <div onclick="showSubscriptionsModal()" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                            <span>💎</span>
+                            <span>Подписки</span>
+                        </div>
+                        <div style="height: 1px; background: var(--border-primary); margin: 4px 0;"></div>
+                        <div onclick="logout()" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; display: flex; align-items: center; gap: 8px; color: var(--accent-primary);">
+                            <span>🚪</span>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="pricing" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>
+                    <span class="gradient-text">GARTI</span><br>
+                    <span class="outline-text">RAMCHA</span>
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Получи доступ к приватному каналу GARTI/RAMCHA, где моментально
+                    сливаются промокоды для 1win
+                </p>
+                
+                <div class="pricing-grid">
+                    <!-- Week Plan -->
+                    <div class="pricing-card">
+                        <div class="card-header">
+                            <h3 class="card-title">STARTER</h3>
+                            <p class="card-description">Попробуй премиум</p>
+                        </div>
+                        
+                        <div class="card-price">
+                            <span class="price-main">$1.49</span>
+                            <span class="price-period">/ неделя</span>
+                        </div>
+                        
+                        <button onclick="purchasePremium('https://plisio.net/payment-button/new/7-SxDvd5SUrZ')" class="buy-btn">
+                            КУПИТЬ ПОДПИСКУ
+                        </button>
+                        
+                        <div class="payment-method">
+                            <span>💎</span>
+                            <span>Crypto платежи</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quarter Plan - Featured -->
+                    <div class="pricing-card featured">
+                        <div class="card-header">
+                            <h3 class="card-title">ULTIMATE</h3>
+                            <p class="card-description">Максимальная выгода</p>
+                            <div class="popular-badge">🏆 ПОПУЛЯРНЫЙ</div>
+                        </div>
+                        
+                        <div class="card-price">
+                            <span class="price-main">$7.99</span>
+                            <span class="price-period">/ 3 месяца</span>
+                        </div>
+                        
+                        <button onclick="purchasePremium('https://plisio.net/payment-button/new/1dghoPpXZLcK')" class="buy-btn">
+                            КУПИТЬ ПОДПИСКУ
+                        </button>
+                        
+                        <div class="payment-method">
+                            <span>💎</span>
+                            <span>Crypto платежи</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Month Plan -->
+                    <div class="pricing-card">
+                        <div class="card-header">
+                            <h3 class="card-title">STANDARD</h3>
+                            <p class="card-description">Оптимальный выбор</p>
+                        </div>
+                        
+                        <div class="card-price">
+                            <span class="price-main">$2.99</span>
+                            <span class="price-period">/ месяц</span>
+                        </div>
+                        
+                        <button onclick="purchasePremium('https://plisio.net/payment-button/new/5-QF3ZSLNNp0')" class="buy-btn">
+                            КУПИТЬ ПОДПИСКУ
+                        </button>
+                        
+                        <div class="payment-method">
+                            <span>💎</span>
+                            <span>Crypto платежи</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section style="padding: 6rem 0; background: var(--bg-secondary); text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                ГОТОВ НАЧАТЬ?
+            </h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Присоединяйся к пользователям, которые уже купили приватный канал!
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <div style="background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 12px; padding: 0.8rem 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🚀</span>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Моментальная активация</span>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 12px; padding: 0.8rem 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🔒</span>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">Безопасные платежи</span>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: 12px; padding: 0.8rem 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>💬</span>
+                    <span style="color: var(--text-secondary); font-size: 0.85rem;">24/7 поддержка</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3>Вход в аккаунт</h3>
+                <button onclick="closeAuthModals()" class="auth-close">✕</button>
+            </div>
+            <div class="auth-modal-body">
+                <form id="loginForm" onsubmit="loginUser(event)">
+                    <div class="form-group">
+                        <label>Email или Username</label>
+                        <input type="text" id="loginEmail" required placeholder="Введите email или username">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="loginPassword" required placeholder="Введите пароль">
+                    </div>
+                    <button type="submit" class="auth-btn primary">Войти</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Нет аккаунта? <span onclick="showRegisterModal()" class="auth-link">Зарегистрироваться</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3>Регистрация</h3>
+                <button onclick="closeAuthModals()" class="auth-close">✕</button>
+            </div>
+            <div class="auth-modal-body">
+                <form id="registerForm" onsubmit="registerUser(event)">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="registerUsername" required placeholder="Введите username">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="registerEmail" required placeholder="Введите email">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="registerPassword" required placeholder="Минимум 6 символов">
+                    </div>
+                    <div class="form-group">
+                        <label>Подтвердите пароль</label>
+                        <input type="password" id="registerPasswordConfirm" required placeholder="Повторите пароль">
+                    </div>
+                    <button type="submit" class="auth-btn primary">Зарегистрироваться</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Уже есть аккаунт? <span onclick="showLoginModal()" class="auth-link">Войти</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h3>Мой профиль</h3>
+                <button onclick="closeProfileModal()" class="auth-close">✕</button>
+            </div>
+            <div class="auth-modal-body">
+                <div class="profile-info">
+                    <div class="profile-avatar-large">
+                        <div id="profileAvatarLarge" style="width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 700; margin: 0 auto 1rem;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="profileUsername" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profileEmail" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата регистрации</label>
+                        <input type="text" id="profileRegistered" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Статус подписки</label>
+                        <div id="profileSubscription" style="padding: 12px; background: var(--bg-elevated); border-radius: 8px; font-weight: 600;">
+                            <span id="subscriptionStatus">Базовый аккаунт</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subscriptions Modal -->
+    <div id="subscriptionsModal" class="auth-modal">
+        <div class="auth-modal-content" style="max-width: 600px;">
+            <div class="auth-modal-header">
+                <h3>Мои подписки</h3>
+                <button onclick="closeSubscriptionsModal()" class="auth-close">✕</button>
+            </div>
+            <div class="auth-modal-body">
+                <div id="subscriptionsContent">
+                    <!-- Content will be filled by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget">
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-window">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="ai-avatar">🤖</div>
+                <div class="ai-info">
+                    <div class="ai-name">GARTI AI</div>
+                    <div class="ai-status">
+                        <div class="status-indicator"></div>
+                        Онлайн
+                    </div>
+                </div>
+                <button class="chat-close" onclick="toggleChat()">✕</button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="chat-messages">
+                <div class="message-bubble ai">
+                    Привет! 👋 Я GARTI AI - ваш умный помощник по техподдержке!
+                    <br><br>
+                    Я могу помочь вам с:
+                    <br>• Вопросами о подписках 💎
+                    <br>• Технические проблемы 🔧
+                    <br>• Процесс оплаты 💳
+                    <br>• Активация аккаунта ⚡
+                    <br><br>
+                    Просто напишите свой вопрос!
+                    <div class="message-time">Сейчас</div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Напишите ваш вопрос..."
+                        rows="1"
+                        onkeydown="handleChatKeydown(event)"
+                        oninput="autoResizeTextarea(this)"
+                    ></textarea>
+                    <button id="chatSendBtn" class="chat-send-btn" onclick="sendMessage()">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button class="chat-toggle-btn" onclick="toggleChat()">
+            <span id="chatToggleIcon">💬</span>
+            <div id="chatNotification" class="chat-notification" style="display: none;">1</div>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <div class="logo">
+                    <div class="logo-icon">G</div>
+                    <span>GARTI/RAMCHA</span>
+                </div>
+                <p class="footer-text">© 2025 GARTI/RAMCHA. Создано TG @glavaukraine</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+            }
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Auth System
+        class AuthSystem {
+            constructor() {
+                this.users = JSON.parse(localStorage.getItem('garti_users') || '[]');
+                this.currentUser = JSON.parse(localStorage.getItem('garti_current_user') || 'null');
+                this.init();
+            }
+
+            init() {
+                if (this.currentUser) {
+                    this.showUserProfile();
+                }
+                this.updateAuthUI();
+            }
+
+            generateId() {
+                return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+
+            hashPassword(password) {
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString();
+            }
+
+            validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            validateUsername(username) {
+                return username.length >= 3 && /^[a-zA-Z0-9_]+$/.test(username);
+            }
+
+            userExists(email, username) {
+                return this.users.find(user => 
+                    user.email.toLowerCase() === email.toLowerCase() || 
+                    user.username.toLowerCase() === username.toLowerCase()
+                );
+            }
+
+            register(username, email, password) {
+                if (!this.validateUsername(username)) {
+                    throw new Error('Username должен быть минимум 3 символа и содержать только буквы, цифры и _');
+                }
+
+                if (!this.validateEmail(email)) {
+                    throw new Error('Неверный формат email');
+                }
+
+                if (password.length < 6) {
+                    throw new Error('Пароль должен быть минимум 6 символов');
+                }
+
+                if (this.userExists(email, username)) {
+                    throw new Error('Пользователь с таким email или username уже существует');
+                }
+
+                const newUser = {
+                    id: this.generateId(),
+                    username: username,
+                    email: email.toLowerCase(),
+                    password: this.hashPassword(password),
+                    registeredAt: new Date().toISOString(),
+                    subscriptions: [],
+                    isActive: true
+                };
+
+                this.users.push(newUser);
+                this.saveUsers();
+
+                return newUser;
+            }
+
+            login(emailOrUsername, password) {
+                const hashedPassword = this.hashPassword(password);
+                const user = this.users.find(u => 
+                    (u.email.toLowerCase() === emailOrUsername.toLowerCase() || 
+                     u.username.toLowerCase() === emailOrUsername.toLowerCase()) &&
+                    u.password === hashedPassword &&
+                    u.isActive
+                );
+
+                if (!user) {
+                    throw new Error('Неверный email/username или пароль');
+                }
+
+                this.currentUser = { ...user };
+                delete this.currentUser.password;
+                localStorage.setItem('garti_current_user', JSON.stringify(this.currentUser));
+
+                return this.currentUser;
+            }
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('garti_current_user');
+                this.updateAuthUI();
+            }
+
+            saveUsers() {
+                localStorage.setItem('garti_users', JSON.stringify(this.users));
+            }
+
+            updateAuthUI() {
+                const authSection = document.getElementById('authSection');
+                const userProfile = document.getElementById('userProfile');
+
+                if (this.currentUser) {
+                    authSection.style.display = 'none';
+                    userProfile.style.display = 'block';
+                    this.updateUserProfileUI();
+                } else {
+                    authSection.style.display = 'block';
+                    userProfile.style.display = 'none';
+                }
+            }
+
+            updateUserProfileUI() {
+                if (!this.currentUser) return;
+
+                const userName = document.getElementById('userName');
+                const userAvatar = document.getElementById('userAvatar');
+
+                userName.textContent = this.currentUser.username;
+                userAvatar.textContent = this.currentUser.username.charAt(0).toUpperCase();
+            }
+
+            showUserProfile() {
+                this.updateAuthUI();
+            }
+
+            getActiveSubscriptions() {
+                if (!this.currentUser) return [];
+                const now = new Date();
+                return this.currentUser.subscriptions.filter(sub => 
+                    sub.isActive && new Date(sub.endDate) > now
+                );
+            }
+        }
+
+        const auth = new AuthSystem();
+
+        function showLoginModal() {
+            closeAuthModals();
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function showRegisterModal() {
+            closeAuthModals();
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        function closeAuthModals() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.remove('active');
+            clearMessages();
+        }
+
+        function showProfileModal() {
+            if (!auth.currentUser) return;
+            
+            const modal = document.getElementById('profileModal');
+            const profileUsername = document.getElementById('profileUsername');
+            const profileEmail = document.getElementById('profileEmail');
+            const profileRegistered = document.getElementById('profileRegistered');
+            const profileAvatarLarge = document.getElementById('profileAvatarLarge');
+            const subscriptionStatus = document.getElementById('subscriptionStatus');
+
+            profileUsername.value = auth.currentUser.username;
+            profileEmail.value = auth.currentUser.email;
+            profileRegistered.value = new Date(auth.currentUser.registeredAt).toLocaleDateString('ru-RU');
+            profileAvatarLarge.textContent = auth.currentUser.username.charAt(0).toUpperCase();
+
+            // Всегда показываем базовый аккаунт - активация только через Telegram
+            subscriptionStatus.textContent = 'Базовый аккаунт';
+            subscriptionStatus.classList.remove('subscription-active');
+
+            modal.classList.add('active');
+            toggleUserMenu();
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        function showSubscriptionsModal() {
+            if (!auth.currentUser) return;
+            
+            const modal = document.getElementById('subscriptionsModal');
+            const content = document.getElementById('subscriptionsContent');
+            
+            // Всегда показываем что подписок нет - активация только через Telegram
+            content.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
+                    <h4>У вас базовый аккаунт</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Выберите один из наших тарифов чтобы получить премиум доступ</p>
+                    <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                        <p style="margin: 0; color: var(--accent-primary); font-weight: 600; font-size: 0.9rem;">
+                            📱 После оплаты напишите @gartiramcha для активации
+                        </p>
+                    </div>
+                    <button onclick="closeSubscriptionsModal(); scrollToPricing();" class="auth-btn primary">Выбрать тариф</button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            toggleUserMenu();
+        }
+
+        function closeSubscriptionsModal() {
+            document.getElementById('subscriptionsModal').classList.remove('active');
+        }
+
+        function scrollToPricing() {
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function logout() {
+            auth.logout();
+            toggleUserMenu();
+            showMessage('Вы успешно вышли из аккаунта', 'success');
+        }
+
+        function loginUser(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                auth.login(email, password);
+                closeAuthModals();
+                showMessage('Добро пожаловать!', 'success');
+                auth.updateAuthUI();
+            } catch (error) {
+                showMessage(error.message, 'error', 'loginModal');
+            }
+        }
+
+        function registerUser(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerPasswordConfirm').value;
+            
+            if (password !== confirmPassword) {
+                showMessage('Пароли не совпадают', 'error', 'registerModal');
+                return;
+            }
+            
+            try {
+                auth.register(username, email, password);
+                auth.login(email, password);
+                closeAuthModals();
+                showMessage('Аккаунт создан! Добро пожаловать!', 'success');
+                auth.updateAuthUI();
+            } catch (error) {
+                showMessage(error.message, 'error', 'registerModal');
+            }
+        }
+
+        function showMessage(text, type = 'info', modalId = null) {
+            clearMessages();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            
+            if (modalId) {
+                const modal = document.getElementById(modalId);
+                const body = modal.querySelector('.auth-modal-body');
+                body.insertBefore(messageDiv, body.firstChild);
+            } else {
+                messageDiv.style.position = 'fixed';
+                messageDiv.style.top = '100px';
+                messageDiv.style.left = '50%';
+                messageDiv.style.transform = 'translateX(-50%)';
+                messageDiv.style.zIndex = '2500';
+                messageDiv.style.maxWidth = '400px';
+                messageDiv.style.animation = 'slideInDown 0.4s ease';
+                document.body.appendChild(messageDiv);
+                
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.remove();
+                    }
+                }, 5000);
+            }
+        }
+
+        function clearMessages() {
+            document.querySelectorAll('.message').forEach(msg => msg.remove());
+        }
+
+        function purchasePremium(url) {
+            const button = event.target;
+            const originalText = button.textContent;
+            
+            if (!auth.currentUser) {
+                showMessage('Войдите в аккаунт для покупки подписки', 'error');
+                setTimeout(() => showLoginModal(), 1500);
+                return;
+            }
+            
+            button.textContent = 'ПЕРЕХОД К ОПЛАТЕ';
+            button.classList.add('loading');
+            button.disabled = true;
+            
+            const paymentWindow = window.open(url, '_blank');
+            
+            const checkClosed = setInterval(() => {
+                if (paymentWindow.closed) {
+                    clearInterval(checkClosed);
+                    button.textContent = originalText;
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                    
+                    showActivationInstructions();
+                }
+            }, 1000);
+        }
+
+        function showActivationInstructions() {
+            const instructionModal = document.createElement('div');
+            instructionModal.className = 'auth-modal active';
+            instructionModal.style.zIndex = '3000';
+            
+            instructionModal.innerHTML = `
+                <div class="auth-modal-content" style="max-width: 500px;">
+                    <div class="auth-modal-header">
+                        <h3>🎉 Почти готово!</h3>
+                        <button onclick="closeInstructionModal()" class="auth-close">✕</button>
+                    </div>
+                    <div class="auth-modal-body" style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">💎</div>
+                        <h4 style="margin-bottom: 1rem; color: var(--accent-primary);">Для активации подписки:</h4>
+                        <div style="background: var(--bg-elevated); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: left;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                <span style="font-size: 1.5rem;">📱</span>
+                                <strong>Шаг 1:</strong> Перейдите в Telegram
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                                <span style="font-size: 1.5rem;">💬</span>
+                                <strong>Шаг 2:</strong> Напишите <code style="background: var(--accent-primary); color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;">@gartiramcha</code>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.5rem;">🧾</span>
+                                <strong>Шаг 3:</strong> Отправьте скриншот транзакции
+                            </div>
+                        </div>
+                        <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <p style="margin: 0; color: var(--accent-primary); font-weight: 600;">
+                                ⚡ Активация происходит в течение 5-10 минут после подтверждения оплаты
+                            </p>
+                        </div>
+                        <button onclick="openTelegram()" class="auth-btn primary" style="margin-bottom: 0.5rem;">
+                            📱 Открыть Telegram
+                        </button>
+                        <button onclick="closeInstructionModal()" class="auth-btn" style="background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: none;">
+                            Понятно
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(instructionModal);
+        }
+
+        function openTelegram() {
+            window.open('https://t.me/gartiramcha', '_blank');
+        }
+
+        function closeInstructionModal() {
+            const modal = document.querySelector('.auth-modal[style*="3000"]');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // AI Chat System
+        class AIChat {
+            constructor() {
+                this.isOpen = false;
+                this.messages = [];
+                this.isTyping = false;
+                this.loadChatHistory();
+                this.initNotification();
+            }
+
+            initNotification() {
+                // Показываем уведомление через 10 секунд
+                setTimeout(() => {
+                    if (!this.isOpen && !localStorage.getItem('chat_shown')) {
+                        this.showNotification();
+                    }
+                }, 10000);
+            }
+
+            showNotification() {
+                const notification = document.getElementById('chatNotification');
+                notification.style.display = 'block';
+            }
+
+            hideNotification() {
+                const notification = document.getElementById('chatNotification');
+                notification.style.display = 'none';
+                localStorage.setItem('chat_shown', 'true');
+            }
+
+            toggle() {
+                const chatWindow = document.getElementById('chatWindow');
+                const toggleIcon = document.getElementById('chatToggleIcon');
+                
+                this.isOpen = !this.isOpen;
+                
+                if (this.isOpen) {
+                    chatWindow.classList.add('active');
+                    toggleIcon.textContent = '✕';
+                    this.hideNotification();
+                    this.scrollToBottom();
+                } else {
+                    chatWindow.classList.remove('active');
+                    toggleIcon.textContent = '💬';
+                }
+            }
+
+            addMessage(content, isUser = false) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message-bubble ${isUser ? 'user' : 'ai'}`;
+                
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('ru-RU', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                messageDiv.innerHTML = `
+                    ${content}
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                // Сохраняем в историю
+                this.messages.push({
+                    content,
+                    isUser,
+                    timestamp: now.toISOString()
+                });
+                this.saveChatHistory();
+            }
+
+            showTyping() {
+                const messagesContainer = document.getElementById('chatMessages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.id = 'typingIndicator';
+                typingDiv.innerHTML = `
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                `;
+                
+                messagesContainer.appendChild(typingDiv);
+                this.scrollToBottom();
+                this.isTyping = true;
+            }
+
+            hideTyping() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+                this.isTyping = false;
+            }
+
+            async sendMessage(message) {
+                if (!message.trim() || this.isTyping) return;
+                
+                // Добавляем сообщение пользователя
+                this.addMessage(message, true);
+                
+                // Показываем индикатор печати
+                this.showTyping();
+                
+                // Симулируем задержку ответа
+                setTimeout(() => {
+                    this.hideTyping();
+                    const response = this.generateResponse(message);
+                    this.addMessage(response);
+                }, 1000 + Math.random() * 2000);
+            }
+
+            generateResponse(message) {
+                const msg = message.toLowerCase();
+                
+                // Ответы на различные темы
+                if (msg.includes('подписк') || msg.includes('премиум') || msg.includes('тариф')) {
+                    return `💎 <strong>О подписках GARTI/RAMCHA:</strong><br><br>
+                    У нас есть 3 тарифа:<br>
+                    • <strong>STARTER</strong> - $1.49/неделя (для пробы)<br>
+                    • <strong>STANDARD</strong> - $2.99/месяц (оптимальный)<br>
+                    • <strong>ULTIMATE</strong> - $7.99/3 месяца (максимальная выгода)<br><br>
+                    🔐 Все оплаты через криптовалюту для максимальной безопасности!<br><br>
+                    Есть вопросы по конкретному тарифу? 🤔`;
+                }
+                
+                if (msg.includes('оплат') || msg.includes('плати') || msg.includes('купить') || msg.includes('криптовалют')) {
+                    return `💳 <strong>Процесс оплаты:</strong><br><br>
+                    1️⃣ Выберите тариф и нажмите "КУПИТЬ ПОДПИСКУ"<br>
+                    2️⃣ Вас перенаправит на Plisio (безопасная криптоплатформа)<br>
+                    3️⃣ Выберите удобную криптовалюту (Bitcoin, Ethereum, USDT и др.)<br>
+                    4️⃣ Отсканируйте QR-код или скопируйте адрес кошелька<br>
+                    5️⃣ Переведите указанную сумму<br><br>
+                    📱 После оплаты обязательно напишите @gartiramcha для активации!<br><br>
+                    🔒 Все платежи защищены и анонимны!`;
+                }
+                
+                if (msg.includes('активац') || msg.includes('активиров') || msg.includes('@gartiramcha')) {
+                    return `⚡ <strong>Активация подписки:</strong><br><br>
+                    📱 Напишите в Telegram <strong>@gartiramcha</strong><br><br>
+                    📋 Отправьте:<br>
+                    • Скриншот успешной транзакции<br>
+                    • Ваш username из аккаунта<br>
+                    • Какой тариф купили<br><br>
+                    ⏱️ <strong>Активация происходит в течение 5-10 минут!</strong><br><br>
+                    💡 Админ работает 24/7, так что не волнуйтесь!`;
+                }
+                
+                if (msg.includes('техническ') || msg.includes('проблем') || msg.includes('ошибк') || msg.includes('не работает')) {
+                    return `🔧 <strong>Техническая поддержка:</strong><br><br>
+                    Если у вас возникли проблемы:<br><br>
+                    🌐 <strong>Проблемы с сайтом:</strong><br>
+                    • Очистите кеш браузера (Ctrl+F5)<br>
+                    • Попробуйте другой браузер<br>
+                    • Проверьте интернет-соединение<br><br>
+                    💳 <strong>Проблемы с оплатой:</strong><br>
+                    • Проверьте, что отправили точную сумму<br>
+                    • Убедитесь, что использовали правильную сеть<br>
+                    • Подождите подтверждения в блокчейне<br><br>
+                    📱 Если проблема не решается - пишите @gartiramcha с описанием!`;
+                }
+                
+                if (msg.includes('аккаунт') || msg.includes('регистрац') || msg.includes('вход') || msg.includes('логин')) {
+                    return `👤 <strong>Управление аккаунтом:</strong><br><br>
+                    📝 <strong>Регистрация:</strong><br>
+                    • Нажмите "Регистрация" в правом верхнем углу<br>
+                    • Придумайте username (минимум 3 символа)<br>
+                    • Введите действующий email<br>
+                    • Создайте надежный пароль (минимум 6 символов)<br><br>
+                    🔐 <strong>Вход в аккаунт:</strong><br>
+                    • Используйте email или username<br>
+                    • Введите пароль<br><br>
+                    💡 Без регистрации нельзя купить подписку!`;
+                }
+                
+                if (msg.includes('безопасност') || msg.includes('анонимност') || msg.includes('данные') || msg.includes('конфиденциальност')) {
+                    return `🔐 <strong>Безопасность и конфиденциальность:</strong><br><br>
+                    ✅ <strong>Что мы гарантируем:</strong><br>
+                    • Все платежи через криптовалюту (полная анонимность)<br>
+                    • Данные хранятся в зашифрованном виде<br>
+                    • Не передаем информацию третьим лицам<br>
+                    • Используем защищенные SSL-соединения<br><br>
+                    💎 <strong>Платежная система Plisio:</strong><br>
+                    • Лицензированная платформа<br>
+                    • Поддержка 15+ криптовалют<br>
+                    • Мгновенные уведомления о платежах<br><br>
+                    🛡️ Ваша безопасность - наш приоритет!`;
+                }
+                
+                if (msg.includes('как работает') || msg.includes('что получу') || msg.includes('функции') || msg.includes('возможности')) {
+                    return `🚀 <strong>Что вы получаете с GARTI/RAMCHA Premium:</strong><br><br>
+                    💎 <strong>Премиум функции:</strong><br>
+                    • Доступ к эксклюзивному контенту<br>
+                    • Профессиональные инструменты<br>
+                    • Приоритетная поддержка<br>
+                    • Расширенные возможности<br><br>
+                    ⚡ <strong>Преимущества:</strong><br>
+                    • Мгновенная активация после оплаты<br>
+                    • Работает на всех устройствах<br>
+                    • Круглосуточная техподдержка<br>
+                    • Регулярные обновления<br><br>
+                    📱 Все детали узнайте у @gartiramcha!`;
+                }
+                
+                if (msg.includes('время работы') || msg.includes('когда') || msg.includes('часы') || msg.includes('поддержка')) {
+                    return `⏰ <strong>Время работы поддержки:</strong><br><br>
+                    🌍 <strong>Мы работаем 24/7!</strong><br><br>
+                    💬 <strong>Telegram поддержка:</strong><br>
+                    • @gartiramcha - всегда онлайн<br>
+                    • Ответ в течение 5-15 минут<br>
+                    • Активация подписок - до 10 минут<br><br>
+                    🤖 <strong>AI чат-бот (я):</strong><br>
+                    • Доступен 24/7<br>
+                    • Мгновенные ответы<br>
+                    • Помощь по всем вопросам<br><br>
+                    📞 Мы всегда готовы помочь!`;
+                }
+                
+                if (msg.includes('привет') || msg.includes('здравств') || msg.includes('hello') || msg.includes('hi')) {
+                    return `👋 Привет! Я GARTI AI - ваш персональный помощник!<br><br>
+                    🎯 <strong>Чем могу помочь:</strong><br>
+                    • Расскажу о тарифах и подписках 💎<br>
+                    • Объясню процесс оплаты 💳<br>
+                    • Помогу с активацией аккаунта ⚡<br>
+                    • Решу технические проблемы 🔧<br>
+                    • Отвечу на любые вопросы 💬<br><br>
+                    💡 Просто опишите вашу ситуацию или задайте вопрос!`;
+                }
+                
+                if (msg.includes('спасибо') || msg.includes('благодар') || msg.includes('thanks')) {
+                    return `🤗 Пожалуйста! Рад был помочь!<br><br>
+                    ⭐ Если у вас есть еще вопросы - не стесняйтесь спрашивать!<br><br>
+                    📱 Для более сложных вопросов всегда можете написать @gartiramcha<br><br>
+                    💎 Удачных покупок и пользования GARTI/RAMCHA!`;
+                }
+                
+                // Общий ответ для остальных случаев
+                return `🤖 Я понял ваш вопрос! Вот как я могу помочь:<br><br>
+                🔥 <strong>Популярные темы:</strong><br>
+                • "подписки" - узнать о тарифах<br>
+                • "оплата" - как купить подписку<br>
+                • "активация" - как активировать<br>
+                • "проблемы" - техническая помощь<br>
+                • "аккаунт" - регистрация и вход<br><br>
+                💬 Или опишите свой вопрос более подробно, и я постараюсь помочь!<br><br>
+                📱 Для сложных вопросов: @gartiramcha`;
+            }
+
+            scrollToBottom() {
+                const messagesContainer = document.getElementById('chatMessages');
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+            }
+
+            saveChatHistory() {
+                localStorage.setItem('garti_chat_history', JSON.stringify(this.messages));
+            }
+
+            loadChatHistory() {
+                const history = localStorage.getItem('garti_chat_history');
+                if (history) {
+                    this.messages = JSON.parse(history);
+                }
+            }
+        }
+
+        const aiChat = new AIChat();
+
+        function toggleChat() {
+            aiChat.toggle();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            aiChat.sendMessage(message);
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Фокус обратно на input
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function handleChatKeydown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 80) + 'px';
+        }
+
+        document.addEventListener('click', (e) => {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            const profileModal = document.getElementById('profileModal');
+            const subscriptionsModal = document.getElementById('subscriptionsModal');
+            
+            if (loginModal.classList.contains('active') && e.target === loginModal) {
+                closeAuthModals();
+            }
+            if (registerModal.classList.contains('active') && e.target === registerModal) {
+                closeAuthModals();
+            }
+            if (profileModal.classList.contains('active') && e.target === profileModal) {
+                closeProfileModal();
+            }
+            if (subscriptionsModal.classList.contains('active') && e.target === subscriptionsModal) {
+                closeSubscriptionsModal();
+            }
+            
+            const userProfile = document.getElementById('userProfile');
+            const userMenu = document.getElementById('userMenu');
+            if (userMenu.style.display === 'block' && !userProfile.contains(e.target)) {
+                toggleUserMenu();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            loadTheme();
+            auth.init();
+        });
+    </script>
+</body>
+</html>
